@@ -1,0 +1,44 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  repo: https://helm.cilium.io
+  chart: cilium
+  targetNamespace: kube-system
+  version: 1.15.0
+  bootstrap: true
+  valuesContent: |-
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true
+    ingressController:
+      enabled: true
+      default: true            # <= cilium ingress becomes the default ingresss
+      loadbalancerMode: shared # <= use shared lb for all ingress resources
+    policyEnforcementMode: "default"
+    hostFirewall:
+      enabled: false
+    operator:
+      replicas: 1
+    nodeinit:
+      enabled: true
+    nodePort:
+      enabled: true # <= necessary for cilium ingress
+      enableHealthCheck: true
+
+    ####### Settings fo replacing kubeproxy: #######
+    kubeProxyReplacement: true
+    k8sServiceHost: 10.1.1.4
+    k8sServicePort: 6443
+    ################################################
+    #
+    l7Proxy: true  # <== for cilium ingress
+    
+    l2announcements:
+      # Make ippool IPs available in local network:
+      enabled: true

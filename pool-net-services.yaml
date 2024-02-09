@@ -1,0 +1,11 @@
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "service-net-services"
+spec:
+  blocks:
+  - cidr: "20.0.10.0/29"
+  serviceSelector:
+    matchLabels:
+      service: net
